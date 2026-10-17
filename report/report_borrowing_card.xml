@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="action_report_borrowing_card" model="ir.actions.report">
+            <field name="name">Borrowing Card</field>
+            <field name="model">library.borrowing</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">library_management.report_borrowing_card_document</field>
+            <field name="report_file">library_management.report_borrowing_card_document</field>
+            <field name="print_report_name">'Borrowing Card - %s' % (object.name)</field>
+            <field name="binding_model_id" ref="model_library_borrowing"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <template id="report_borrowing_card_document">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+
+                            <div class="text-center mb-4">
+                                <h2>📚 Library Borrowing Card</h2>
+                            </div>
+
+                            <div class="row mt-4">
+                                <div class="col-6">
+                                    <strong>Member Name:</strong>
+                                    <p t-esc="doc.member_id.name"/>
+                                </div>
+                                <div class="col-6">
+                                    <strong>Membership ID:</strong>
+                                    <p t-esc="doc.member_id.membership_id"/>
+                                </div>
+                            </div>
+
+                            <hr/>
+
+                            <div class="row mt-3">
+                                <div class="col-6">
+                                    <strong>Book Title:</strong>
+                                    <p t-esc="doc.book_id.name"/>
+                                </div>
+                                <div class="col-6">
+                                    <strong>ISBN:</strong>
+                                    <p t-esc="doc.book_id.isbn"/>
+                                </div>
+                            </div>
+
+                            <div class="row mt-3">
+                                <div class="col-6">
+                                    <strong>Borrow Date:</strong>
+                                    <p t-esc="doc.borrow_date"/>
+                                </div>
+                                <div class="col-6">
+                                    <strong>Due Date:</strong>
+                                    <p t-esc="doc.due_date"/>
+                                </div>
+                            </div>
+
+                            <div class="mt-4 text-center">
+                                <strong>Reference:</strong>
+                                <h4 t-esc="doc.name"/>
+                                <p style="font-family: 'Courier New', monospace; letter-spacing: 5px; font-size: 20px;">
+                                    <t t-esc="'*%s*' % doc.name"/>
+                                </p>
+                                <small class="text-muted">(Barcode placeholder)</small>
+                            </div>
+
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+    </data>
+</odoo>

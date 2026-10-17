@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="action_report_overdue_books_pdf" model="ir.actions.report">
+            <field name="name">Overdue Books Report</field>
+            <field name="model">library.borrowing</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">library_management.report_overdue_books_document</field>
+            <field name="report_file">library_management.report_overdue_books_document</field>
+            <field name="print_report_name">'Overdue Books Report'</field>
+            <field name="binding_model_id" ref="model_library_borrowing"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <record id="action_report_overdue_books" model="ir.actions.server">
+            <field name="name">Overdue Books Report Action</field>
+            <field name="model_id" ref="model_library_borrowing"/>
+            <field name="state">code</field>
+            <field name="code">
+action = env.ref('library_management.action_report_overdue_books_pdf').report_action(records)
+            </field>
+        </record>
+
+        <template id="report_overdue_books_document">
+            <t t-call="web.html_container">
+                <t t-call="web.external_layout">
+                    <div class="page">
+
+                        <div class="text-center mb-4">
+                            <h2>Overdue Books Report</h2>
+                            <p>Report Date: <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d')"/></p>
+                        </div>
+
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Member</th>
+                                    <th>Book</th>
+                                    <th>Due Date</th>
+                                    <th>Days Overdue</th>
+                                    <th>Fine Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="docs" t-as="doc">
+                                    <td><span t-field="doc.member_id.name"/></td>
+                                    <td><span t-field="doc.book_id.name"/></td>
+                                    <td><span t-field="doc.due_date"/></td>
+                                    <td>
+                                        <t t-if="doc.due_date">
+                                            <span t-esc="(datetime.date.today() - doc.due_date).days if doc.due_date &lt; datetime.date.today() else 0"/>
+                                        </t>
+                                    </td>
+                                    <td><span t-esc="'%.2f EGP' % doc.fine_amount"/></td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="4" class="text-end"><strong>Total Fine Amount</strong></td>
+                                    <td><strong t-esc="'%.2f EGP' % sum(docs.mapped('fine_amount'))"/></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+
+                    </div>
+                </t>
+            </t>
+        </template>
+
+    </data>
+</odoo>

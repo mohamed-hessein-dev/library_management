@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="library_book_view_tree" model="ir.ui.view">
+            <field name="name">library.book.tree</field>
+            <field name="model">library.book</field>
+            <field name="arch" type="xml">
+                <tree string="Books" decoration-muted="status in ('lost','damaged')">
+                    <field name="name"/>
+                    <field name="isbn"/>
+                    <field name="author_id"/>
+                    <field name="category_id"/>
+                    <field name="total_copies"/>
+                    <field name="available_copies"/>
+                    <field name="status" widget="badge"
+                           decoration-success="status == 'available'"
+                           decoration-warning="status == 'borrowed'"
+                           decoration-danger="status in ('lost','damaged')"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="library_book_view_form" model="ir.ui.view">
+            <field name="name">library.book.form</field>
+            <field name="model">library.book</field>
+            <field name="arch" type="xml">
+                <form string="Book">
+                    <header>
+                        <field name="status" widget="statusbar"
+                               statusbar_visible="available,borrowed"/>
+                    </header>
+                    <sheet>
+                        <field name="cover_image" widget="image" class="oe_avatar"/>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" type="object"
+                                    name="action_view_active_borrowings" icon="fa-book">
+                                <field name="active_borrowing_count" widget="statinfo"
+                                       string="Active Borrowings"/>
+                            </button>
+                        </div>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="Book Title"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="isbn"/>
+                                <field name="author_id"/>
+                                <field name="category_id"/>
+                                <field name="publication_date"/>
+                                <field name="pages"/>
+                            </group>
+                            <group>
+                                <field name="total_copies"/>
+                                <field name="available_copies" readonly="1"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Description">
+                                <field name="description"/>
+                            </page>
+                            <page string="Borrowings">
+                                <field name="borrowing_ids" readonly="1">
+                                    <tree>
+                                        <field name="member_id"/>
+                                        <field name="borrow_date"/>
+                                        <field name="due_date"/>
+                                        <field name="return_date"/>
+                                        <field name="status"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="library_book_view_kanban" model="ir.ui.view">
+            <field name="name">library.book.kanban</field>
+            <field name="model">library.book</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="name"/>
+                    <field name="author_id"/>
+                    <field name="cover_image"/>
+                    <field name="status"/>
+                    <field name="available_copies"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_card oe_kanban_global_click">
+                                <div class="o_kanban_image">
+                                    <img t-att-src="kanban_image('library.book', 'cover_image', record.id.raw_value)"
+                                         alt="Cover" style="max-width:64px;"/>
+                                </div>
+                                <div class="oe_kanban_details">
+                                    <strong>
+                                        <field name="name"/>
+                                    </strong>
+                                    <div>
+                                        <field name="author_id"/>
+                                    </div>
+                                    <div>
+                                        <field name="status" widget="badge"/>
+                                        <span>- Available:
+                                            <field name="available_copies"/>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="library_book_view_search" model="ir.ui.view">
+            <field name="name">library.book.search</field>
+            <field name="model">library.book</field>
+            <field name="arch" type="xml">
+                <search string="Search Books">
+                    <field name="name"/>
+                    <field name="isbn"/>
+                    <field name="author_id"/>
+                    <field name="category_id"/>
+                    <filter string="Available" name="filter_available"
+                            domain="[('status', '=', 'available')]"/>
+                    <filter string="Borrowed" name="filter_borrowed"
+                            domain="[('status', '=', 'borrowed')]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Category" name="group_category"
+                                context="{'group_by': 'category_id'}"/>
+                        <filter string="Status" name="group_status"
+                                context="{'group_by': 'status'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="library_book_view_pivot" model="ir.ui.view">
+            <field name="name">library.book.pivot</field>
+            <field name="model">library.book</field>
+            <field name="arch" type="xml">
+                <pivot string="Books Statistics">
+                    <field name="category_id" type="row"/>
+                    <field name="status" type="col"/>
+                    <field name="total_copies" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id="library_book_view_graph" model="ir.ui.view">
+            <field name="name">library.book.graph</field>
+            <field name="model">library.book</field>
+            <field name="arch" type="xml">
+                <graph string="Books by Category" type="bar">
+                    <field name="category_id"/>
+                    <field name="total_copies" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id="library_book_action_view" model="ir.actions.act_window">
+            <field name="name">Books</field>
+            <field name="res_model">library.book</field>
+            <field name="view_mode">tree,kanban,form,pivot,graph</field>
+        </record>
+    </data>
+</odoo>

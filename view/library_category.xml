@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="library_category_view_tree" model="ir.ui.view">
+            <field name="name">library.category.tree</field>
+            <field name="model">library.category</field>
+            <field name="arch" type="xml">
+                <tree string="Categories">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="parent_id"/>
+                    <field name="book_count"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="library_category_view_form" model="ir.ui.view">
+            <field name="name">library.category.form</field>
+            <field name="model">library.category</field>
+            <field name="arch" type="xml">
+                <form string="Category">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" type="object"
+                                    name="toggle_active" icon="fa-book">
+                                <field name="book_count" widget="statinfo" string="Books"/>
+                            </button>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="code"/>
+                                <field name="parent_id"/>
+                            </group>
+                            <group>
+                                <field name="description"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Sub-Categories">
+                                <field name="child_ids">
+                                    <tree>
+                                        <field name="name"/>
+                                        <field name="code"/>
+                                        <field name="book_count"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Books">
+                                <field name="book_ids">
+                                    <tree>
+                                        <field name="name"/>
+                                        <field name="isbn"/>
+                                        <field name="author_id"/>
+                                        <field name="status"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="library_category_view_search" model="ir.ui.view">
+            <field name="name">library.category.search</field>
+            <field name="model">library.category</field>
+            <field name="arch" type="xml">
+                <search string="Search Categories">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="parent_id"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Parent Category" name="group_parent"
+                                context="{'group_by': 'parent_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="library_category_action_view" model="ir.actions.act_window">
+            <field name="name">Categories</field>
+            <field name="res_model">library.category</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+    </data>
+</odoo>

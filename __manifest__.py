@@ -1,0 +1,23 @@
+{
+    "name": "Library Management",
+    "version": "17.0.1.0.0",
+    "category": "Services/Library",
+    "summary": "Complete Library Management System",
+    "depends": ["base", "mail"],
+    "data": [
+        "security/library_security.xml",
+        "security/ir.model.access.csv",
+        "data/sequence.xml",
+        "data/cron.xml",
+        "wizard/wizard_views.xml",
+        "view/library_category.xml",
+        "view/library_book.xml",
+        "view/library_member.xml",
+        "view/library_borrowing.xml",
+        "view/library_menu.xml",
+        "report/report_borrowing_card.xml",
+        "report/report_overdue_books.xml",
+       ],
+    "installable": True,
+    "application": True,
+}

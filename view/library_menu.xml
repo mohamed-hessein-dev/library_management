@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem id="menu_library_root" name="Library" sequence="10"/>
+
+
+    <menuitem id="menu_library_management" name="Management" parent="menu_library_root" sequence="10"/>
+
+
+    <menuitem id="menu_library_book"
+              name="Books"
+              parent="menu_library_management"
+              action="library_book_action_view"
+              sequence="10"/>
+
+    <menuitem id="menu_library_category"
+              name="Categories"
+              parent="menu_library_management"
+              action="library_category_action_view"
+              sequence="20"/>
+
+    <menuitem id="menu_library_member"
+              name="Members"
+              parent="menu_library_management"
+              action="library_member_action_view"
+              sequence="30"/>
+
+    <menuitem id="menu_library_borrowing"
+              name="Borrowings"
+              parent="menu_library_management"
+              action="action_library_borrowing"
+              sequence="40"/>
+</odoo>
